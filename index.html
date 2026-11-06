@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gold Rate Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one narrow column — inputs card, then a jeweller's bill card */
+:root {
+  --ground: #0E2A1F;
+  --ground-2: #17402F;
+  --card: #F7F4EA;
+  --field: #FFFDF6;
+  --edge: #DDD5BD;
+  --gold: #B98A2F;
+  --gold-bright: #D9B45C;
+  --on-gold: #FFF9EA;
+  --ink: #22190F;
+  --ink-soft: #6B5F49;
+  --sub: #BBD1A9;
+  --note: #A8C296;
+  --tint: #F3EAD3;
+  --minus: #9A2A2A;
+  --ok: #2F6B3F;
+  --shadow: 0 12px 32px rgba(0,0,0,.35);
+  --display: "Marcellus", Georgia, "Times New Roman", serif;
+  --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #08170F; --ground-2: #0F2A1E; --card: #1C211C; --field: #232A24;
+    --edge: #3A4237; --gold: #C79A3E; --gold-bright: #E0BC66; --on-gold: #1A1408;
+    --ink: #EFE8D6; --ink-soft: #ADA48E; --sub: #9DBB8C; --note: #87A676;
+    --tint: #2B2A1E; --minus: #E07A6E; --ok: #7FC98F; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #08170F; --ground-2: #0F2A1E; --card: #1C211C; --field: #232A24;
+  --edge: #3A4237; --gold: #C79A3E; --gold-bright: #E0BC66; --on-gold: #1A1408;
+  --ink: #EFE8D6; --ink-soft: #ADA48E; --sub: #9DBB8C; --note: #87A676;
+  --tint: #2B2A1E; --minus: #E07A6E; --ok: #7FC98F; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { background: var(--ground); }
+body {
+  background: linear-gradient(180deg, var(--ground) 0%, var(--ground-2) 100%) var(--ground);
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: var(--body);
+  padding-block: 24px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 460px; margin: 0 auto; display: grid; gap: 20px; }
+header { text-align: center; }
+h1 { font-family: var(--display); font-weight: 400; color: var(--gold-bright); font-size: 28px; margin: 0; line-height: 1.15; text-wrap: balance; }
+.tag { color: var(--sub); font-size: 12px; letter-spacing: .22em; text-transform: uppercase; margin-top: 6px; }
+.card { background: var(--card); border: 1px solid var(--edge); border-radius: 14px; box-shadow: var(--shadow); }
+.inputs { padding: 18px; display: grid; gap: 18px; }
+.field { display: grid; gap: 6px; }
+label, .label { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); font-weight: 600; }
+input[type=number] {
+  background: var(--field); border: 1.5px solid var(--edge); border-radius: 8px;
+  padding: 10px 12px; font-size: 16px; color: var(--ink); width: 100%; outline: none;
+  font-family: var(--body); font-variant-numeric: tabular-nums;
+}
+input[type=number]:focus { border-color: var(--gold); box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 20%, transparent); }
+.hint { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+.saved { color: var(--ok); font-weight: 600; }
+.seg { display: flex; gap: 8px; }
+.seg button {
+  flex: 1; padding: 9px 4px; border-radius: 8px; border: 1.5px solid var(--edge);
+  background: var(--field); color: var(--ink); font: 700 15px var(--body); cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.seg button small { display: block; font-size: 11px; font-weight: 500; opacity: .85; }
+.seg button[aria-pressed="true"] { background: var(--gold); border-color: var(--gold); color: var(--on-gold); }
+.seg button:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 2px; }
+.weight { display: flex; gap: 10px; }
+.weight > div { flex: 1; min-width: 0; display: grid; gap: 4px; }
+.unit { font-size: 11px; color: var(--ink-soft); text-align: center; }
+.conv { padding: 10px 12px; border-radius: 8px; background: var(--tint); border: 1px solid var(--gold); font-size: 13px; line-height: 1.6; }
+.line { display: flex; justify-content: space-between; gap: 12px; font-variant-numeric: tabular-nums; }
+.line.minus { color: var(--minus); }
+.line.total { font-weight: 700; border-top: 1px dashed var(--gold); margin-top: 4px; padding-top: 4px; }
+.bill { overflow: hidden; }
+.bill-head { background: var(--ground); padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; }
+.bill-head .t { font-family: var(--display); color: var(--gold-bright); font-size: 17px; }
+.bill-head .k { color: var(--sub); font-size: 12px; }
+.bill-body { padding: 14px 18px 18px; }
+.row { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; font-size: 14px; font-variant-numeric: tabular-nums; }
+.row span:first-child { color: var(--ink-soft); }
+.row.strong span { color: var(--ink); font-weight: 700; }
+.row.strong span:first-child { font-weight: 600; }
+.divider { border-top: 1.5px dashed var(--edge); margin: 8px 0; }
+.grand { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-top: 4px; flex-wrap: wrap; }
+.grand .l { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); font-weight: 700; }
+.grand .v { font-family: var(--display); font-size: 32px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.eff { text-align: right; font-size: 12px; color: var(--ink-soft); }
+.foot { color: var(--note); font-size: 11.5px; line-height: 1.6; text-align: center; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+<style>body{margin:0} [hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Gold Calculator</h1>
+    <div class="tag">±15% Rate · No making · No GST</div>
+  </header>
+
+  <section class="card inputs">
+    <div class="field">
+      <span class="label" id="purity-label">Gold purity</span>
+      <div class="seg" role="group" aria-labelledby="purity-label" id="karat">
+        <button type="button" data-k="24K" aria-pressed="true">24K<small>100% · 999</small></button>
+        <button type="button" data-k="22K" aria-pressed="false">22K<small>91.6% · 916</small></button>
+        <button type="button" data-k="18K" aria-pressed="false">18K<small>75% · 750</small></button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="rate">24K gold rate (₹ per 10 grams)</label>
+      <input id="rate" type="number" inputmode="decimal" placeholder="e.g. 113250">
+      <div class="hint" id="rate-hint">Your last rate is saved on this device.</div>
+      <div class="conv" id="conv" hidden>
+        <div class="line"><span>24K price</span><span id="c24"></span></div>
+        <div class="line minus"><span id="cdl"></span><span id="cd"></span></div>
+        <div class="line total"><span id="ckl"></span><span id="ck"></span></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="label">Weight</span>
+      <div class="weight">
+        <div><input id="grams" type="number" inputmode="decimal" placeholder="0" aria-label="Grams"><span class="unit">grams</span></div>
+        <div><input id="mg" type="number" inputmode="numeric" placeholder="0" aria-label="Milligrams"><span class="unit">milligrams</span></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="label" id="adj-label">Rate adjustment (% of 10-gram price)</span>
+      <div class="seg" role="group" aria-labelledby="adj-label" id="adjmode">
+        <button type="button" data-m="add" aria-pressed="true">+ Add</button>
+        <button type="button" data-m="deduct" aria-pressed="false">− Deduct</button>
+      </div>
+      <input id="adj" type="number" inputmode="decimal" value="15" aria-label="Adjustment percent">
+      <div class="hint" id="adj-hint"></div>
+      <div class="hint">Weight, % and Add/Deduct are remembered on this device.</div>
+    </div>
+  </section>
+
+  <section class="card bill" aria-live="polite">
+    <div class="bill-head"><span class="t">Estimate</span><span class="k" id="bk">24K gold</span></div>
+    <div class="bill-body">
+      <div class="row"><span>24K 10 g price</span><span id="b24"></span></div>
+      <div id="bkarat" hidden>
+        <div class="row"><span id="bdl"></span><span id="bd"></span></div>
+        <div class="row strong"><span id="bkl"></span><span id="bkv"></span></div>
+      </div>
+      <div class="row"><span id="bal"></span><span id="ba"></span></div>
+      <div class="row strong"><span>Adjusted 10 g price</span><span id="br10"></span></div>
+      <div class="row"><span>Rate</span><span id="brg"></span></div>
+      <div class="row"><span>Net weight</span><span id="bw"></span></div>
+      <div class="divider"></div>
+      <div class="row strong"><span>Gold value</span><span id="bgv"></span></div>
+      <div class="divider"></div>
+      <div class="grand"><span class="l">Total payable</span><span class="v" id="total"></span></div>
+      <div class="eff" id="eff"></div>
+    </div>
+  </section>
+
+  <p class="foot">Formula: (24K 10 g price × purity ± 15%) ÷ 10 × weight. Purity: 22K = 91.6% (916), 18K = 75% (750).</p>
+</div>
+
+<script>
+(function () {
+  var PURITY = { "24K": 1, "22K": 0.916, "18K": 0.75 };
+  var PCT = { "24K": "100", "22K": "91.6", "18K": "75" };
+  var CUT = { "24K": "0", "22K": "8.4", "18K": "25" };
+  var KEY = "gold-calc-24k-rate";
+  var DEFAULT_RATE = "113250";
+  var state = { karat: "24K", mode: "add" };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var inr = function (n) { return "₹" + n.toLocaleString("en-IN", { maximumFractionDigits: 0 }); };
+  var inrP = function (n) { return "₹" + n.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
+  var num = function (el) { var v = parseFloat(el.value); return isFinite(v) ? v : 0; };
+
+  // Restore the last 24K rate the user entered
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  $("rate").value = saved || DEFAULT_RATE;
+
+  // Restore last weight, adjustment % and add/deduct choice
+  var SKEY = "gold-calc-last-inputs";
+  var last = {};
+  try { last = JSON.parse(localStorage.getItem(SKEY) || "{}") || {}; } catch (e) { last = {}; }
+  if (last.grams != null) $("grams").value = last.grams;
+  if (last.mg != null) $("mg").value = last.mg;
+  if (last.adj != null) $("adj").value = last.adj;
+  if (last.mode === "add" || last.mode === "deduct") state.mode = last.mode;
+  document.querySelectorAll("#adjmode button").forEach(function (b) {
+    b.setAttribute("aria-pressed", String(b.getAttribute("data-m") === state.mode));
+  });
+  function saveInputs() {
+    try {
+      localStorage.setItem(SKEY, JSON.stringify({
+        grams: $("grams").value, mg: $("mg").value, adj: $("adj").value, mode: state.mode
+      }));
+    } catch (e) {}
+  }
+  $("rate-hint").textContent = saved ? "Showing your last saved rate." : "Your rate is saved on this device as you type.";
+
+  function saveRate() {
+    var v = $("rate").value.trim();
+    try {
+      if (v && parseFloat(v) > 0) {
+        localStorage.setItem(KEY, v);
+        $("rate-hint").innerHTML = '<span class="saved">Saved.</span> This rate will be here next time.';
+      }
+    } catch (e) {
+      $("rate-hint").textContent = "This browser isn't allowing saving, so the rate resets on refresh.";
+    }
+  }
+
+  function render() {
+    var price24 = num($("rate"));
+    var base10 = price24 * PURITY[state.karat];
+    var pct = num($("adj"));
+    var adjAmt = base10 * pct / 100;
+    var r10 = state.mode === "add" ? base10 + adjAmt : base10 - adjAmt;
+    var rpg = r10 / 10;
+    var weight = num($("grams")) + num($("mg")) / 1000;
+    var total = rpg * weight;
+    var sign = state.mode === "add" ? "+" : "−";
+    var k = state.karat, other = k !== "24K";
+
+    $("conv").hidden = !other;
+    $("bkarat").hidden = !other;
+    if (other) {
+      $("c24").textContent = inr(price24);
+      $("cdl").textContent = k + " deduction (−" + CUT[k] + "%)";
+      $("cd").textContent = "− " + inr(price24 - base10);
+      $("ckl").textContent = k + " price (" + PCT[k] + "%) per 10 g";
+      $("ck").textContent = inr(base10);
+      $("bdl").textContent = k + " deduction (−" + CUT[k] + "%)";
+      $("bd").textContent = "− " + inr(price24 - base10);
+      $("bkl").textContent = k + " (" + PCT[k] + "%) 10 g price";
+      $("bkv").textContent = inr(base10);
+    }
+    $("adj-hint").innerHTML = inr(base10) + " " + sign + " " + pct + "% (" + inr(adjAmt) + ") = <b>" + inr(r10) + "</b> per 10 g = " + inrP(rpg) + " per gram";
+    $("bk").textContent = k + " gold";
+    $("b24").textContent = inr(price24);
+    $("bal").textContent = (state.mode === "add" ? "Add " : "Deduct ") + pct + "%";
+    $("ba").textContent = sign + " " + inr(adjAmt);
+    $("br10").textContent = inr(r10);
+    $("brg").textContent = inrP(rpg) + " / g";
+    $("bw").textContent = weight.toFixed(3) + " g";
+    $("bgv").textContent = inr(total);
+    $("total").textContent = inr(total);
+    $("eff").textContent = "effective " + (weight > 0 ? inrP(total / weight) : "—") + " per gram";
+  }
+
+  function wireSeg(groupId, attr, key) {
+    var btns = $(groupId).querySelectorAll("button");
+    btns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        state[key] = b.getAttribute(attr);
+        btns.forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+        saveInputs();
+        render();
+      });
+    });
+  }
+  wireSeg("karat", "data-k", "karat");
+  wireSeg("adjmode", "data-m", "mode");
+
+  $("rate").addEventListener("input", function () { saveRate(); render(); });
+  ["grams", "mg", "adj"].forEach(function (id) { $(id).addEventListener("input", function () { saveInputs(); render(); }); });
+
+  render();
+})();
+</script>
+</body>
+</html>
