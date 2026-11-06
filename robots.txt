@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://raviuwe30.github.io/gold-calculator/sitemap.xml

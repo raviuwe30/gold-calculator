@@ -3,7 +3,59 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Gold Rate Calculator</title>
+<title>Gold Rate Calculator – 24K, 22K, 18K Gold Price per Gram (₹ India)</title>
+<meta name="description" content="Free gold rate calculator for India. Enter today's 24K gold rate per 10 grams and get the price of 24K, 22K (916) and 18K (750) gold by grams and milligrams, with ± % adjustment. Works on mobile.">
+<meta name="keywords" content="gold calculator, gold rate calculator, gold price calculator, 22K gold rate, 24K gold rate, 18K gold rate, gold price per gram, 916 gold price, gold rate today India, jewellery price calculator">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="author" content="raviuwe30">
+<meta name="theme-color" content="#0E2A1F">
+<link rel="canonical" href="https://raviuwe30.github.io/gold-calculator/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_IN">
+<meta property="og:site_name" content="Gold Rate Calculator">
+<meta property="og:title" content="Gold Rate Calculator – 24K, 22K, 18K Gold Price per Gram">
+<meta property="og:description" content="Enter the 24K rate per 10 g and instantly get 24K, 22K and 18K gold value by weight in ₹. Free, fast, mobile-friendly.">
+<meta property="og:url" content="https://raviuwe30.github.io/gold-calculator/">
+<meta property="og:image" content="https://raviuwe30.github.io/gold-calculator/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Gold Rate Calculator – 24K, 22K, 18K Gold Price per Gram">
+<meta name="twitter:description" content="Enter the 24K rate per 10 g and instantly get 24K, 22K and 18K gold value by weight in ₹.">
+<meta name="twitter:image" content="https://raviuwe30.github.io/gold-calculator/og-image.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Gold Rate Calculator",
+      "url": "https://raviuwe30.github.io/gold-calculator/",
+      "description": "Free gold rate calculator for India: 24K, 22K (916) and 18K (750) gold price by grams and milligrams with percentage adjustment.",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any",
+      "inLanguage": "en-IN",
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How do I calculate the 22K gold price from the 24K rate?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Multiply the 24K rate by 0.916 (91.6% purity). For example, if 24K gold is ₹1,13,250 per 10 grams, 22K gold is about ₹1,03,737 per 10 grams." } },
+        { "@type": "Question", "name": "How do I calculate the 18K gold price?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Multiply the 24K rate by 0.75 (75% purity, hallmark 750)." } },
+        { "@type": "Question", "name": "How is the gold price per gram calculated?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Take the 10-gram price for your purity, add or deduct your percentage, divide by 10 to get the rate per gram, then multiply by the weight in grams (milligrams ÷ 1000)." } },
+        { "@type": "Question", "name": "Does this calculator include making charges or GST?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. It shows the gold value only. Use the percentage adjustment field to add or deduct a margin." } }
+      ]
+    }
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Inter:wght@400;500;600;700&display=swap">
 <style>
@@ -100,6 +152,11 @@ input[type=number]:focus { border-color: var(--gold); box-shadow: 0 0 0 3px colo
 .grand .v { font-family: var(--display); font-size: 32px; color: var(--ink); font-variant-numeric: tabular-nums; }
 .eff { text-align: right; font-size: 12px; color: var(--ink-soft); }
 .foot { color: var(--note); font-size: 11.5px; line-height: 1.6; text-align: center; }
+.faq { color: var(--note); font-size: 12.5px; line-height: 1.6; }
+.faq h2 { font-family: var(--display); font-weight: 400; color: var(--gold-bright); font-size: 16px; text-align: center; margin: 0 0 8px; }
+.faq details { border-top: 1px solid color-mix(in srgb, var(--note) 25%, transparent); padding: 8px 2px; }
+.faq summary { cursor: pointer; color: var(--sub); font-weight: 600; }
+.faq p { margin: 6px 0 0; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 <style>body{margin:0} [hidden]{display:none!important}</style>
@@ -173,6 +230,18 @@ input[type=number]:focus { border-color: var(--gold); box-shadow: 0 0 0 3px colo
   </section>
 
   <p class="foot">Formula: (24K 10 g price × purity ± 15%) ÷ 10 × weight. Purity: 22K = 91.6% (916), 18K = 75% (750).</p>
+
+  <section class="faq" aria-labelledby="faq-h">
+    <h2 id="faq-h">Gold price calculator – FAQ</h2>
+    <details><summary>How do I calculate the 22K gold price from the 24K rate?</summary>
+      <p>Multiply the 24K rate by 0.916 (91.6% purity, hallmark 916). If 24K gold is ₹1,13,250 per 10 grams, 22K gold is about ₹1,03,737 per 10 grams.</p></details>
+    <details><summary>How do I calculate the 18K gold price?</summary>
+      <p>Multiply the 24K rate by 0.75 (75% purity, hallmark 750).</p></details>
+    <details><summary>How is the gold price per gram calculated?</summary>
+      <p>Take the 10-gram price for your purity, add or deduct your percentage, divide by 10 for the rate per gram, then multiply by the weight in grams (milligrams ÷ 1000).</p></details>
+    <details><summary>Does it include making charges or GST?</summary>
+      <p>No. It shows the gold value only. Use the percentage field to add or deduct a margin.</p></details>
+  </section>
 </div>
 
 <script>
